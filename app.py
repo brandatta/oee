@@ -38,7 +38,7 @@ st.sidebar.markdown("<div style='margin-top:-35px; text-align:center;'></div>", 
 logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
 for p in logo_paths:
     if p.exists():
-        st.sidebar.image(str(p), width=160)  # tamaño ajustado (antes 140)
+        st.sidebar.image(str(p), width=180)  # tamaño ajustado (antes 140)
         break
 
 st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=True)
