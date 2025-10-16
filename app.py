@@ -32,11 +32,11 @@ def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buena
     return A, P, Q, OEE, tiempo_operacion
 
 # ================= SIDEBAR =================
-# Logo arriba de Parámetros (busca primero en raíz y luego en assets/)
+# Logo arriba de Parámetros (ajustado a fondo transparente y tamaño menor)
 logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
 for p in logo_paths:
     if p.exists():
-        st.sidebar.image(str(p), use_container_width=True)
+        st.sidebar.image(str(p), width=140)  # tamaño reducido
         break
 
 st.sidebar.header("Parámetros")
