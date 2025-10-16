@@ -32,13 +32,16 @@ def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buena
     return A, P, Q, OEE, tiempo_operacion
 
 # ================= SIDEBAR =================
-# Logo arriba de Parámetros (ajustado a fondo transparente y tamaño menor)
+# Logo arriba de todo, centrado y un poco más grande
+st.sidebar.markdown("<div style='margin-top:-35px; text-align:center;'></div>", unsafe_allow_html=True)
+
 logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
 for p in logo_paths:
     if p.exists():
-        st.sidebar.image(str(p), width=140)  # tamaño reducido
+        st.sidebar.image(str(p), width=160)  # tamaño ajustado (antes 140)
         break
 
+st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=True)
 st.sidebar.header("Parámetros")
 tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0, value=480.0)
 tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, value=60.0)
