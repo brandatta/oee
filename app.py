@@ -33,7 +33,7 @@ def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buena
 
 # ================= SIDEBAR =================
 # Logo arriba de todo, centrado y un poco más grande
-st.sidebar.markdown("<div style='margin-top:-35px; text-align:center;'></div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div style='margin-top:-55px; text-align:center;'></div>", unsafe_allow_html=True)
 
 logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
 for p in logo_paths:
