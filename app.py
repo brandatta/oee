@@ -47,7 +47,7 @@ tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0,
 tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, value=60.0)
 ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, value=1.5)
 piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
-piezas_buenas = st.sidebar.number_input("Piezas buenas", min_value=0, value=17500)
+piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
 
 # ================= CÁLCULO =================
 A, P, Q, OEE, tiempo_operacion = calc_oee(
