@@ -76,7 +76,7 @@ for c, name, val, desc in zip(
     """, unsafe_allow_html=True)
 
 # ================= CONCEPTOS =================
-st.subheader("Conceptos clave")
+st.subheader("Conceptos")
 st.markdown("""
 <div class='formula'><b>Disponibilidad (A)</b> = Tiempo de operación / Tiempo planificado</div>
 <div class='formula'><b>Rendimiento (P)</b> = (Ciclo ideal × Piezas totales) / Tiempo de operación real</div>
@@ -89,4 +89,4 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.caption(f"© {datetime.now().year} — Interfaces Brandatta • Calculadora OEE")
+st.caption(f"© {datetime.now().year} — Brandatta • Calculadora OEE")
