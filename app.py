@@ -80,7 +80,7 @@ st.subheader("Conceptos")
 st.markdown("""
 <div class='formula'><b>Disponibilidad (A)</b> = Tiempo de operación / Tiempo planificado</div>
 <div class='formula'><b>Rendimiento (P)</b> = (Ciclo ideal × Piezas totales) / Tiempo de operación real</div>
-<div class='formula'><b>Calidad (Q)</b> = Piezas buenas / Piezas totales</div>
+<div class='formula'><b>Calidad (Q)</b> = Piezas de Calidad Aprobada / Piezas totales</div>
 <div class='note'>
 <b>OEE = A × P × Q</b><br>
 • Mide la eficiencia global del equipo.<br>
