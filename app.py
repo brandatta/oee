@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from pathlib import Path
 
 # ================= CONFIG =================
 st.set_page_config(page_title="Calculadora OEE", layout="wide")
@@ -31,7 +32,14 @@ def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buena
     return A, P, Q, OEE, tiempo_operacion
 
 # ================= SIDEBAR =================
-st.sidebar.header("⚙️ Parámetros")
+# Logo arriba de Parámetros (busca primero en raíz y luego en assets/)
+logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
+for p in logo_paths:
+    if p.exists():
+        st.sidebar.image(str(p), use_container_width=True)
+        break
+
+st.sidebar.header("Parámetros")
 tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0, value=480.0)
 tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, value=60.0)
 ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, value=1.5)
@@ -44,7 +52,7 @@ A, P, Q, OEE, tiempo_operacion = calc_oee(
 )
 
 # ================= INTERFAZ =================
-st.title("📊 Calculadora de OEE")
+st.title("Calculadora de OEE")
 st.write("Mide **Disponibilidad (A)**, **Rendimiento (P)**, **Calidad (Q)** y **OEE** en tu línea de producción.")
 
 cols = st.columns(5)
@@ -54,7 +62,7 @@ for c, name, val, desc in zip(
     [A, P, Q, OEE, tiempo_operacion],
     ["Operación / Plan", "(Ciclo ideal × Pzas) / (Operación × 60)", "Buenas / Totales", "A × P × Q", "Plan − Paros"]
 ):
-    color = "ok" if val >= 0.85 else "mid" if val >= 0.6 else "bad"
+    color = "ok" if (val >= 0.85 and name != "Tiempo Operación (min)") else ("mid" if (val >= 0.6 and name != "Tiempo Operación (min)") else "bad")
     val_txt = f"{val*100:.2f}%" if name != "Tiempo Operación (min)" else f"{val:.2f}"
     st.markdown(f"""
     <div class='kpi-card'>
@@ -65,7 +73,7 @@ for c, name, val, desc in zip(
     """, unsafe_allow_html=True)
 
 # ================= CONCEPTOS =================
-st.subheader("📘 Conceptos clave")
+st.subheader("Conceptos clave")
 st.markdown("""
 <div class='formula'><b>Disponibilidad (A)</b> = Tiempo de operación / Tiempo planificado</div>
 <div class='formula'><b>Rendimiento (P)</b> = (Ciclo ideal × Piezas totales) / Tiempo de operación real</div>
