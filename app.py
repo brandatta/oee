@@ -19,16 +19,17 @@ st.markdown("""
 .bad {color:#b00020}
 .note {background:#fff7e6; border:1px solid #ffe1ac; padding:12px 14px; border-radius:12px}
 .formula {background:#eef6ff; border:1px solid #d3e6ff; padding:12px 14px; border-radius:12px}
+.factor-box {background-color:#eef6ff; padding:12px 14px; border-radius:12px; border:1px solid #d3e6ff;}
 </style>
 """, unsafe_allow_html=True)
 
 # ================= FUNCIONES =================
-def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buenas):
+def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buenas, factor_a, factor_b):
     tiempo_operacion = max(tiempo_plan - tiempo_paro, 0)
     A = tiempo_operacion / tiempo_plan if tiempo_plan > 0 else 0
     P = (ciclo_ideal * piezas_totales) / (tiempo_operacion * 60) if tiempo_operacion > 0 else 0
     Q = piezas_buenas / piezas_totales if piezas_totales > 0 else 0
-    OEE = A * P * Q
+    OEE = A * P * Q * factor_a * factor_b
     return A, P, Q, OEE, tiempo_operacion
 
 # ================= SIDEBAR =================
@@ -38,7 +39,7 @@ st.sidebar.markdown("<div style='margin-top:-55px; text-align:center;'></div>", 
 logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
 for p in logo_paths:
     if p.exists():
-        st.sidebar.image(str(p), width=180)  # tamaño ajustado (antes 140)
+        st.sidebar.image(str(p), width=180)
         break
 
 st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=True)
@@ -49,21 +50,26 @@ ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, val
 piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
 piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
 
+# Bloque visual para los nuevos factores
+st.sidebar.markdown("<br><div class='factor-box'><b>Factores Operativos</b></div>", unsafe_allow_html=True)
+factor_a = st.sidebar.number_input("Factor Operativo A", min_value=0.0, value=1.0, step=0.1)
+factor_b = st.sidebar.number_input("Factor Operativo B", min_value=0.0, value=1.0, step=0.1)
+
 # ================= CÁLCULO =================
 A, P, Q, OEE, tiempo_operacion = calc_oee(
-    tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buenas
+    tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buenas, factor_a, factor_b
 )
 
 # ================= INTERFAZ =================
 st.title("Calculadora de OEE")
-st.write("Mide **Disponibilidad (A)**, **Rendimiento (P)**, **Calidad (Q)** y **OEE** en tu línea de producción.")
+st.write("Mide **Disponibilidad (A)**, **Rendimiento (P)**, **Calidad (Q)** y **Factores Operativos (A y B)** para obtener el OEE ajustado de tu línea de producción.")
 
 cols = st.columns(5)
 for c, name, val, desc in zip(
     cols,
     ["Disponibilidad (A)", "Rendimiento (P)", "Calidad (Q)", "OEE", "Tiempo Operación (min)"],
     [A, P, Q, OEE, tiempo_operacion],
-    ["Operación / Plan", "(Ciclo ideal × Pzas) / (Operación × 60)", "Buenas / Totales", "A × P × Q", "Plan − Paros"]
+    ["Operación / Plan", "(Ciclo ideal × Pzas) / (Operación × 60)", "Buenas / Totales", "A × P × Q × Factores", "Plan − Paros"]
 ):
     color = "ok" if (val >= 0.85 and name != "Tiempo Operación (min)") else ("mid" if (val >= 0.6 and name != "Tiempo Operación (min)") else "bad")
     val_txt = f"{val*100:.2f}%" if name != "Tiempo Operación (min)" else f"{val:.2f}"
@@ -81,11 +87,12 @@ st.markdown("""
 <div class='formula'><b>Disponibilidad (A)</b> = Tiempo de operación / Tiempo planificado</div>
 <div class='formula'><b>Rendimiento (P)</b> = (Ciclo ideal × Piezas totales) / Tiempo de operación real</div>
 <div class='formula'><b>Calidad (Q)</b> = Piezas de Calidad Aprobada / Piezas totales</div>
+<div class='formula'><b>Factores Operativos (A y B)</b> = Variables ajustables que representan condiciones adicionales de la operación (por ejemplo, eficiencia energética, desempeño del equipo o entorno).</div>
 <div class='note'>
-<b>OEE = A × P × Q</b><br>
-• Mide la eficiencia global del equipo.<br>
+<b>OEE = A × P × Q × FactorA × FactorB</b><br>
+• Mide la eficiencia global del equipo considerando factores adicionales.<br>
 • OEE ≥ 85% suele considerarse “clase mundial”.<br>
-• Analiza los factores A, P y Q para identificar oportunidades de mejora.
+• Analiza los factores A, P, Q y los factores operativos para identificar oportunidades de mejora.
 </div>
 """, unsafe_allow_html=True)
 
