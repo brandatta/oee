@@ -20,9 +20,9 @@ st.markdown("""
 .note {background:#fff7e6; border:1px solid #ffe1ac; padding:12px 14px; border-radius:12px}
 .formula {background:#eef6ff; border:1px solid #d3e6ff; padding:12px 14px; border-radius:12px}
 
-/* 🎨 Fondo distinto solo para Factor A y Factor B */
-div[data-testid="stNumberInput"][key="factor_a"],
-div[data-testid="stNumberInput"][key="factor_b"] {
+/* 🎨 Fondo distinto para los dos últimos number_input del SIDEBAR (Factor A y B) */
+div[data-testid="stSidebar"] div[data-testid="stNumberInput"]:nth-last-of-type(1),
+div[data-testid="stSidebar"] div[data-testid="stNumberInput"]:nth-last-of-type(2) {
     background-color: #eef6ff !important;
     border: 1px solid #d3e6ff !important;
     border-radius: 8px;
@@ -41,7 +41,7 @@ def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buena
     return A, P, Q, OEE, tiempo_operacion
 
 # ================= SIDEBAR =================
-# Logo arriba
+# Logo arriba de todo
 st.sidebar.markdown("<div style='margin-top:-55px; text-align:center;'></div>", unsafe_allow_html=True)
 logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
 for p in logo_paths:
@@ -50,15 +50,15 @@ for p in logo_paths:
         break
 st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=True)
 
-# Parámetros
 st.sidebar.header("Parámetros")
 tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0, value=480.0)
 tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, value=60.0)
 ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, value=1.5)
 piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
 piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
-factor_a = st.sidebar.number_input("Factor Operativo A", min_value=0.0, value=1.0, step=0.1, key="factor_a")
-factor_b = st.sidebar.number_input("Factor Operativo B", min_value=0.0, value=1.0, step=0.1, key="factor_b")
+# Los dos últimos: factores (quedarán con fondo distinto por el CSS de arriba)
+factor_a = st.sidebar.number_input("Factor Operativo A", min_value=0.0, value=1.0, step=0.1)
+factor_b = st.sidebar.number_input("Factor Operativo B", min_value=0.0, value=1.0, step=0.1)
 
 # ================= CÁLCULO =================
 A, P, Q, OEE, tiempo_operacion = calc_oee(
