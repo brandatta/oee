@@ -20,13 +20,23 @@ st.markdown("""
 .note {background:#fff7e6; border:1px solid #ffe1ac; padding:12px 14px; border-radius:12px}
 .formula {background:#eef6ff; border:1px solid #d3e6ff; padding:12px 14px; border-radius:12px}
 
-/* --- Fondo distinto SOLO para los number_input dentro del contenedor .factor-wrap --- */
-.factor-wrap > div[data-testid="stNumberInput"] {
-    background-color: #eef6ff;
-    border: 1px solid #d3e6ff;
-    border-radius: 8px;
-    padding: 8px 10px;
-    margin-bottom: 6px; /* igual separación que el resto */
+/* === Fondo distinto en los inputs por aria-label (sin separadores) === */
+section[data-testid="stSidebar"] input[aria-label="Factor Operativo A"],
+section[data-testid="stSidebar"] input[aria-label="Factor Operativo B"] {
+  background-color: #eef6ff !important;
+  border-radius: 6px !important;
+}
+
+/* borde del contenedor visual del input (cuando existe el wrapper baseweb) */
+section[data-testid="stSidebar"] div[data-baseweb="input"] input[aria-label="Factor Operativo A"],
+section[data-testid="stSidebar"] div[data-baseweb="input"] input[aria-label="Factor Operativo B"] {
+  box-shadow: inset 0 0 0 1px #d3e6ff !important;
+}
+
+/* mejora contraste del placeholder/valor */
+section[data-testid="stSidebar"] input[aria-label="Factor Operativo A"]::placeholder,
+section[data-testid="stSidebar"] input[aria-label="Factor Operativo B"]::placeholder {
+  color: #4a617a !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -56,12 +66,8 @@ tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, va
 ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, value=1.5)
 piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
 piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
-
-# ---- Envolvemos SOLO los factores en un contenedor invisible con clase factor-wrap ----
-st.sidebar.markdown('<div class="factor-wrap">', unsafe_allow_html=True)
 factor_a = st.sidebar.number_input("Factor Operativo A", min_value=0.0, value=1.0, step=0.1)
 factor_b = st.sidebar.number_input("Factor Operativo B", min_value=0.0, value=1.0, step=0.1)
-st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 # ================= CÁLCULO =================
 A, P, Q, OEE, tiempo_operacion = calc_oee(
@@ -95,12 +101,9 @@ st.markdown("""
 <div class='formula'><b>Disponibilidad (A)</b> = Tiempo de operación / Tiempo planificado</div>
 <div class='formula'><b>Rendimiento (P)</b> = (Ciclo ideal × Piezas totales) / Tiempo de operación real</div>
 <div class='formula'><b>Calidad (Q)</b> = Piezas de Calidad Aprobada / Piezas totales</div>
-<div class='formula'><b>Factores Operativos (A y B)</b> = Variables ajustables que representan condiciones adicionales de la operación (por ejemplo, eficiencia energética, desempeño del equipo o entorno).</div>
+<div class='formula'><b>Factores Operativos (A y B)</b> = Variables ajustables que representan condiciones adicionales de la operación.</div>
 <div class='note'>
-<b>OEE = A × P × Q × FactorA × FactorB</b><br>
-• Mide la eficiencia global del equipo considerando factores adicionales.<br>
-• OEE ≥ 85% suele considerarse “clase mundial”.<br>
-• Analiza los factores A, P, Q y los factores operativos para identificar oportunidades de mejora.
+<b>OEE = A × P × Q × FactorA × FactorB</b>
 </div>
 """, unsafe_allow_html=True)
 
