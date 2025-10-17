@@ -45,7 +45,7 @@ section[data-testid="stSidebar"] input[aria-label="Factor Operativo B"] {
 def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buenas, factor_a, factor_b):
     tiempo_operacion = max(tiempo_plan - tiempo_paro, 0)
     A = tiempo_operacion / tiempo_plan if tiempo_plan > 0 else 0
-    P = ((ciclo_ideal *   factor_a * factor_b)*piezas_totales) / (tiempo_operacion * 60) if tiempo_operacion > 0 else 0
+    P = ((ciclo_ideal )*piezas_totales) / ((tiempo_operacion * 60)*((factor_a) * (factor_b))) if tiempo_operacion > 0 else 0
     Q = piezas_buenas / piezas_totales if piezas_totales > 0 else 0
     OEE = A * P * Q
     return A, P, Q, OEE, tiempo_operacion
