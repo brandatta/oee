@@ -19,7 +19,6 @@ st.markdown("""
 .bad {color:#b00020}
 .note {background:#fff7e6; border:1px solid #ffe1ac; padding:12px 14px; border-radius:12px}
 .formula {background:#eef6ff; border:1px solid #d3e6ff; padding:12px 14px; border-radius:12px}
-.factor-box {background-color:#eef6ff; padding:12px 14px; border-radius:12px; border:1px solid #d3e6ff;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -44,16 +43,23 @@ for p in logo_paths:
 
 st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=True)
 st.sidebar.header("Parámetros")
+
 tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0, value=480.0)
 tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, value=60.0)
 ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, value=1.5)
 piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
 piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
 
-# Bloque visual para los nuevos factores
-st.sidebar.markdown("<br><div class='factor-box'><b>Factores Operativos</b></div>", unsafe_allow_html=True)
-factor_a = st.sidebar.number_input("Factor Operativo A", min_value=0.0, value=1.0, step=0.1)
-factor_b = st.sidebar.number_input("Factor Operativo B", min_value=0.0, value=1.0, step=0.1)
+# --- Factores con fondo diferenciado ---
+st.sidebar.markdown(
+    """
+    <div style="background-color:#eef6ff; border:1px solid #d3e6ff; border-radius:10px; padding:12px 10px; margin-top:8px;">
+    """,
+    unsafe_allow_html=True,
+)
+factor_a = st.sidebar.number_input("Factor Operativo A", min_value=0.0, value=1.0, step=0.1, key="factA")
+factor_b = st.sidebar.number_input("Factor Operativo B", min_value=0.0, value=1.0, step=0.1, key="factB")
+st.sidebar.markdown("</div>", unsafe_allow_html=True)
 
 # ================= CÁLCULO =================
 A, P, Q, OEE, tiempo_operacion = calc_oee(
