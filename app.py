@@ -20,13 +20,13 @@ st.markdown("""
 .note {background:#fff7e6; border:1px solid #ffe1ac; padding:12px 14px; border-radius:12px}
 .formula {background:#eef6ff; border:1px solid #d3e6ff; padding:12px 14px; border-radius:12px}
 
-/* 🎨 Diferente fondo solo para Factor A y B */
-div[data-testid="stNumberInput"]:has(label:contains("Factor Operativo A")),
-div[data-testid="stNumberInput"]:has(label:contains("Factor Operativo B")) {
-    background-color: #eef6ff;
-    border: 1px solid #d3e6ff;
+/* 🎨 Fondo distinto solo para Factor A y Factor B */
+div[data-testid="stNumberInput"][key="factor_a"],
+div[data-testid="stNumberInput"][key="factor_b"] {
+    background-color: #eef6ff !important;
+    border: 1px solid #d3e6ff !important;
     border-radius: 8px;
-    padding: 6px 10px;
+    padding: 8px 10px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -41,25 +41,24 @@ def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buena
     return A, P, Q, OEE, tiempo_operacion
 
 # ================= SIDEBAR =================
-# Logo arriba de todo, centrado y un poco más grande
+# Logo arriba
 st.sidebar.markdown("<div style='margin-top:-55px; text-align:center;'></div>", unsafe_allow_html=True)
-
 logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
 for p in logo_paths:
     if p.exists():
         st.sidebar.image(str(p), width=180)
         break
-
 st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=True)
-st.sidebar.header("Parámetros")
 
+# Parámetros
+st.sidebar.header("Parámetros")
 tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0, value=480.0)
 tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, value=60.0)
 ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, value=1.5)
 piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
 piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
-factor_a = st.sidebar.number_input("Factor Operativo A", min_value=0.0, value=1.0, step=0.1)
-factor_b = st.sidebar.number_input("Factor Operativo B", min_value=0.0, value=1.0, step=0.1)
+factor_a = st.sidebar.number_input("Factor Operativo A", min_value=0.0, value=1.0, step=0.1, key="factor_a")
+factor_b = st.sidebar.number_input("Factor Operativo B", min_value=0.0, value=1.0, step=0.1, key="factor_b")
 
 # ================= CÁLCULO =================
 A, P, Q, OEE, tiempo_operacion = calc_oee(
