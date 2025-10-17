@@ -20,23 +20,23 @@ st.markdown("""
 .note {background:#fff7e6; border:1px solid #ffe1ac; padding:12px 14px; border-radius:12px}
 .formula {background:#eef6ff; border:1px solid #d3e6ff; padding:12px 14px; border-radius:12px}
 
-/* === Fondo distinto en los inputs por aria-label (sin separadores) === */
+/* === Fondo verde claro en Factor Operativo A y B === */
 section[data-testid="stSidebar"] input[aria-label="Factor Operativo A"],
 section[data-testid="stSidebar"] input[aria-label="Factor Operativo B"] {
-  background-color: #eef6ff !important;
+  background-color: #e9f8ef !important;
   border-radius: 6px !important;
 }
 
-/* borde del contenedor visual del input (cuando existe el wrapper baseweb) */
+/* Borde del contenedor */
 section[data-testid="stSidebar"] div[data-baseweb="input"] input[aria-label="Factor Operativo A"],
 section[data-testid="stSidebar"] div[data-baseweb="input"] input[aria-label="Factor Operativo B"] {
-  box-shadow: inset 0 0 0 1px #d3e6ff !important;
+  box-shadow: inset 0 0 0 1px #bde5c1 !important;
 }
 
-/* mejora contraste del placeholder/valor */
-section[data-testid="stSidebar"] input[aria-label="Factor Operativo A"]::placeholder,
-section[data-testid="stSidebar"] input[aria-label="Factor Operativo B"]::placeholder {
-  color: #4a617a !important;
+/* Color del texto */
+section[data-testid="stSidebar"] input[aria-label="Factor Operativo A"],
+section[data-testid="stSidebar"] input[aria-label="Factor Operativo B"] {
+  color: #285c36 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -51,7 +51,6 @@ def calc_oee(tiempo_plan, tiempo_paro, ciclo_ideal, piezas_totales, piezas_buena
     return A, P, Q, OEE, tiempo_operacion
 
 # ================= SIDEBAR =================
-# Logo arriba
 st.sidebar.markdown("<div style='margin-top:-55px; text-align:center;'></div>", unsafe_allow_html=True)
 logo_paths = [Path("brandatta_logo.png"), Path("assets/brandatta_logo.png")]
 for p in logo_paths:
