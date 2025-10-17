@@ -98,11 +98,11 @@ for c, name, val, desc in zip(
 st.subheader("Conceptos")
 st.markdown("""
 <div class='formula'><b>Disponibilidad (A)</b> = Tiempo de operación / Tiempo planificado</div>
-<div class='formula'><b>Rendimiento (P)</b> = (Ciclo ideal × Piezas totales) / Tiempo de operación real</div>
+<div class='formula'><b>Rendimiento (P)</b> = (Ciclo ideal × Piezas totales) / ((Tiempo de operación real) x (FactorA) x (FactorB)) </div>
 <div class='formula'><b>Calidad (Q)</b> = Piezas de Calidad Aprobada / Piezas totales</div>
 <div class='formula'><b>Factores Operativos (A y B)</b> = Variables ajustables que representan condiciones adicionales de la operación.</div>
 <div class='note'>
-<b>OEE = A × P × Q × FactorA × FactorB</b>
+<b>OEE = A × P × Q </b>
 </div>
 """, unsafe_allow_html=True)
 
