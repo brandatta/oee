@@ -58,10 +58,10 @@ def calc_oee(
     cap_at_100: bool = True,
 ):
     """
-    Definición adoptada:
+    Definición adoptada (FO penaliza si < 1):
     - Disponibilidad (A) = Tiempo de operación / Tiempo planificado
-    - Performance (P) = (Ciclo ideal × Piezas totales) / (Tiempo operación real × 60 × FO1 × FO2)
-      (FO1 y FO2 actúan como factores operativos que ajustan el denominador de Performance)
+    - Rendimiento (P) = [(Ciclo ideal × Piezas totales) × (FO1 × FO2)] / (Tiempo operación × 60)
+      => Si FO < 1, reduce P (penaliza). Si FO > 1, aumenta P.
     - Calidad (Q) = Piezas buenas / Piezas totales
     - OEE = A × P × Q
     """
@@ -69,8 +69,9 @@ def calc_oee(
 
     A_raw = (tiempo_operacion / tiempo_plan) if tiempo_plan > 0 else 0.0
 
-    denom = (tiempo_operacion * 60.0) * (fo1 * fo2)
-    P_raw = ((ciclo_ideal_seg_un * piezas_totales) / denom) if denom > 0 else 0.0
+    denom = (tiempo_operacion * 60.0)
+    numer = (ciclo_ideal_seg_un * piezas_totales) * (fo1 * fo2)
+    P_raw = (numer / denom) if denom > 0 else 0.0
 
     Q_raw = (piezas_buenas / piezas_totales) if piezas_totales > 0 else 0.0
 
@@ -80,7 +81,7 @@ def calc_oee(
         A = clamp01(A_raw)
         P = clamp01(P_raw)
         Q = clamp01(Q_raw)
-        OEE = clamp01(A * P * Q)  # recálculo con cap
+        OEE = clamp01(A * P * Q)
     else:
         A, P, Q, OEE = A_raw, P_raw, Q_raw, OEE_raw
 
@@ -98,18 +99,16 @@ st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=Tru
 
 st.sidebar.header("Parámetros")
 
-# Entradas
 tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0, value=480.0)
 tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, value=60.0)
 ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, value=1.5)
 piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
 piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
 
-# Factores: evitar cero
+# Factores: permitir penalización (<1) pero evitar 0
 fo1 = st.sidebar.number_input("Factor Operativo FO1", min_value=0.1, value=1.0, step=0.1)
 fo2 = st.sidebar.number_input("Factor Operativo FO2", min_value=0.1, value=1.0, step=0.1)
 
-# Cap a 100% (recomendado para lectura operativa)
 cap_at_100 = st.sidebar.toggle("Capear métricas a 100%", value=True)
 
 # ================= VALIDACIONES (UI) =================
@@ -122,7 +121,7 @@ if tiempo_paro > tiempo_plan and tiempo_plan > 0:
 if piezas_totales > 0 and piezas_buenas > piezas_totales:
     warnings.append("Las **Piezas de Calidad Aprobada** superan las **Piezas totales**. Revisá la carga.")
 if ciclo_ideal == 0 and piezas_totales > 0:
-    warnings.append("El **Ciclo ideal** es 0. Performance quedará en 0 (revisá el dato).")
+    warnings.append("El **Ciclo ideal** es 0. Rendimiento quedará en 0 (revisá el dato).")
 
 if warnings:
     st.sidebar.markdown("### Observaciones")
@@ -145,7 +144,8 @@ A, P, Q, OEE, tiempo_operacion, A_raw, P_raw, Q_raw, OEE_raw = calc_oee(
 st.title("Calculadora de OEE")
 st.write(
     "Mide **Disponibilidad (A)**, **Rendimiento (P)**, **Calidad (Q)** y **Factores Operativos (FO1 y FO2)** "
-    "para obtener el OEE de tu línea de producción. En esta versión, **FO1 y FO2 ajustan el Rendimiento (P)**."
+    "para obtener el OEE de tu línea de producción. En esta versión, **FO1 y FO2 ajustan el Rendimiento (P)** "
+    "(si FO < 1, penaliza; si FO > 1, mejora)."
 )
 
 cols = st.columns(5)
@@ -154,7 +154,7 @@ names = ["Disponibilidad (A)", "Rendimiento (P)", "Calidad (Q)", "OEE", "Tiempo 
 vals = [A, P, Q, OEE, tiempo_operacion]
 descs = [
     "Operación / Plan",
-    "(Ciclo ideal × Pzas) / (Operación × 60 × FO1 × FO2)",
+    "[(Ciclo ideal × Pzas) × (FO1 × FO2)] / (Operación × 60)",
     "Buenas / Totales",
     "A × P × Q",
     "Plan − Paros",
@@ -179,7 +179,7 @@ for c, name, val, desc in zip(cols, names, vals, descs):
         unsafe_allow_html=True,
     )
 
-# Mostrar auditoría si hubo cap y el valor raw excede 100%
+# Auditoría si cap está activo y el raw excede 100%
 if cap_at_100:
     over = []
     if A_raw > 1:
@@ -202,9 +202,9 @@ st.subheader("Conceptos")
 st.markdown(
     """
 <div class='formula'><b>Disponibilidad (A)</b> = Tiempo de operación / Tiempo planificado</div>
-<div class='formula'><b>Rendimiento (P)</b> = (Ciclo ideal × Piezas totales) / (Tiempo de operación × 60 × FO1 × FO2)</div>
+<div class='formula'><b>Rendimiento (P)</b> = [(Ciclo ideal × Piezas totales) × (FO1 × FO2)] / (Tiempo de operación × 60)</div>
 <div class='formula'><b>Calidad (Q)</b> = Piezas de Calidad Aprobada / Piezas totales</div>
-<div class='formula'><b>Factores Operativos (FO1 y FO2)</b> = Ajustes operativos que impactan el cálculo de <b>Rendimiento (P)</b>.</div>
+<div class='formula'><b>Factores Operativos (FO1 y FO2)</b> = Ajustes operativos que impactan el cálculo de <b>Rendimiento (P)</b> (FO &lt; 1 penaliza; FO &gt; 1 mejora).</div>
 <div class='note'>
 <b>OEE = A × P × Q</b>
 </div>
