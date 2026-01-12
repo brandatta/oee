@@ -99,10 +99,10 @@ st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=Tru
 
 st.sidebar.header("Parámetros")
 
-tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0, value=480.0)
+tiempo_plan = st.sidebar.number_input("Tiempo Planificado (min)", min_value=0.0, value=480.0)
 tiempo_paro = st.sidebar.number_input("Paradas Registradas (min)", min_value=0.0, value=60.0)
 ciclo_ideal = st.sidebar.number_input("Ciclo Ideal Nominal (seg/un)", min_value=0.0, value=1.5)
-piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
+piezas_totales = st.sidebar.number_input("Piezas Totales", min_value=0, value=18000)
 piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
 
 # Factores: permitir penalización (<1) pero evitar 0
