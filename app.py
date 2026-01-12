@@ -194,7 +194,7 @@ if cap_at_100:
     if over:
         st.info(
             "Algunas métricas superan 100% con los datos ingresados. Se aplicó Cap a 100% para lectura operativa. "
-            "Valores sin cap:\n- " + "\n- ".join(over)
+            "Valores sin Cap:\n- " + "\n- ".join(over)
         )
 
 # ================= CONCEPTOS =================
