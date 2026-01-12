@@ -100,8 +100,8 @@ st.sidebar.markdown("<div style='margin-top:-5px'></div>", unsafe_allow_html=Tru
 st.sidebar.header("Parámetros")
 
 tiempo_plan = st.sidebar.number_input("Tiempo planificado (min)", min_value=0.0, value=480.0)
-tiempo_paro = st.sidebar.number_input("Tiempo de paros (min)", min_value=0.0, value=60.0)
-ciclo_ideal = st.sidebar.number_input("Ciclo ideal (seg/un)", min_value=0.0, value=1.5)
+tiempo_paro = st.sidebar.number_input("Paradas Registradas (min)", min_value=0.0, value=60.0)
+ciclo_ideal = st.sidebar.number_input("Ciclo Ideal Nominal (seg/un)", min_value=0.0, value=1.5)
 piezas_totales = st.sidebar.number_input("Piezas totales", min_value=0, value=18000)
 piezas_buenas = st.sidebar.number_input("Piezas de Calidad Aprobada", min_value=0, value=17500)
 
@@ -144,7 +144,7 @@ A, P, Q, OEE, tiempo_operacion, A_raw, P_raw, Q_raw, OEE_raw = calc_oee(
 st.title("Calculadora de OEE")
 st.write(
     "Mide **Disponibilidad (A)**, **Rendimiento (P)**, **Calidad (Q)** y **Factores Operativos (FO1 y FO2)** "
-    "para obtener el OEE de tu línea de producción. En esta versión, **FO1 y FO2 ajustan el Rendimiento (P)** "
+    "para obtener el OEE de la línea de producción. En esta versión, **FO1 y FO2 ajustan el Rendimiento (P)** "
     "(si FO < 1, penaliza; si FO > 1, mejora)."
 )
 
@@ -193,7 +193,7 @@ if cap_at_100:
 
     if over:
         st.info(
-            "Algunas métricas superan 100% con los datos ingresados. Se aplicó cap a 100% para lectura operativa. "
+            "Algunas métricas superan 100% con los datos ingresados. Se aplicó Cap a 100% para lectura operativa. "
             "Valores sin cap:\n- " + "\n- ".join(over)
         )
 
